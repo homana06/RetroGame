@@ -16,9 +16,9 @@ backx = 0
 backy = 0
 screen = pygame.display.set_mode([800, 800])
 pygame.display.set_caption("The Adventures of Dolphin-San")
-try:
+try:                                                  # Attempts to load the music, turned off for development, its loud
   pygame.mixer.music.load("Music/Brinstar.mp3")
-  pygame.mixer.music.set_volume(0.5)
+  pygame.mixer.music.set_volume(-0.5)
   pygame.mixer.music.play(-1)
 except pygame.error:
   print("Error loading or playing the music file.")
@@ -32,7 +32,7 @@ background_size = (scalefactor,scalefactor)
 backgroundf = pygame.transform.scale(background1,background_size)
 player = Dolphin(200, 400, "images/DolphinLeft.png", "images/DolphinLeft2.png",
                  "images/DolphinRight.png", "images/DolphinRight2.png")
-#---------------movement--------------------------------------|||||||||||||||||||||||||||||||
+#---------------Joystick Movement--------------------------------------|||||||||||||||||||||||||||||||
 keys = pygame.key.get_pressed()
 num_joysticks = pygame.joystick.get_count()
 
@@ -50,10 +50,10 @@ else:
 while running:  #main running loop
   keys = pygame.key.get_pressed()
   screen.fill(Black)
-  x = player.get_x()
+  x = player.get_x()      # Background movement
   y = player.get_y()
   print(x,y)
-  if x >= 705 and backx > -(scalefactor - 800):
+  if x >= 705 and backx > -(scalefactor - 800):# - 800 keeps it completly within frame
     backx = backx - 5
   elif x <= 15 and backx < 0:
     backx = backx + 5
@@ -64,7 +64,7 @@ while running:  #main running loop
     backy = backy + 5
 
   screen.blit(backgroundf, (backx, backy))
-
+# loading the maze ------ Logic Errors here I presume
   start_row = max(0, int(backy / 30))  # Assuming each maze cell is 30 pixels
   end_row = min(len(maze_array), int((backy + 800) / 30))
 
@@ -81,8 +81,8 @@ while running:  #main running loop
         wall_rect = wall.get_rect()
         wall_rect.topleft = (col - start_col) * 30, (row - start_row) * 30
         screen.blit(wall, wall_rect)
-
-  for event in pygame.event.get():
+# as per usual 
+  for event in pygame.event.get(): 
     if event.type == pygame.QUIT:
       running = False
 
