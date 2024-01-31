@@ -15,13 +15,13 @@ class Dolphin():
     self.vel = 5
     self.last = ["a"]
 
-  def draw(self, surface):
+  def draw(self, surface):                          # Initial Drawing 
     #pygame.draw.rect(surface, (0,0,255), self.rect)
     if self.last == "a":
       surface.blit(self.walkl[0], (self.x, self.y))
     else:
       surface.blit(self.walkr[0], (self.x, self.y))
-
+                                                    # Movement and drawing
   def move(self, keys, frame, surface):
     if keys[pygame.K_a]:  # Check if the "a" key is pressed
       if self.x - self.vel > 0:
@@ -43,7 +43,7 @@ class Dolphin():
     else:
       surface.blit(self.walkl[frame], (self.x, self.y))
     self.rect.center = (self.x, self.y)
-
+                                                           # joystick Movement
   def move_joystick(self, joystick, frame,surface):
     left_stick_x = joystick.get_axis(0)
     left_stick_y = joystick.get_axis(1)
@@ -74,7 +74,7 @@ class Dolphin():
     else:
       surface.blit(self.walkl[frame], (self.x, self.y))
     self.rect.center = (self.x, self.y)
-
+                                               # Getters
   def get_x(self):
     return(self.x)
   def get_y(self):
