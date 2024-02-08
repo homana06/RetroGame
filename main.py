@@ -15,6 +15,7 @@ Black = (0,0,0)
 backx = 0
 backy = 0
 screen = pygame.display.set_mode([800, 800])
+collideables = pygame.display.set_mode(2400,2400)
 pygame.display.set_caption("The Adventures of Dolphin-San")
 try:                                                  # Attempts to load the music, turned off for development, its loud
   pygame.mixer.music.load("Music/Brinstar.mp3")
@@ -26,7 +27,9 @@ clock = pygame.time.Clock()
 scalefactor = 2400
 
 
-running = True
+wall = pygame.image.load("images/Testwall1")
+wall_size = (30,30)
+wallfinal = pygame.transform.scale(wall,wall_size)
 background1 = pygame.image.load("images/background.png")
 background_size = (scalefactor,scalefactor)
 backgroundf = pygame.transform.scale(background1,background_size)
@@ -64,6 +67,7 @@ while running:  #main running loop
     backy = backy + 5
 
   screen.blit(backgroundf, (backx, backy))
+  collideables.blit(wallfinal,backx,backy)
 # loading the maze ------ Logic Errors here I presume
   start_row = max(0, int(backy / 30))  # Assuming each maze cell is 30 pixels
   end_row = min(len(maze_array), int((backy + 800) / 30))
@@ -80,7 +84,7 @@ while running:  #main running loop
       if cell_value == 1:  # Assuming 1 represents a wall
         wall_rect = wall.get_rect()
         wall_rect.topleft = (col - start_col) * 30, (row - start_row) * 30
-        screen.blit(wall, wall_rect)
+        collideables.blit(wall, wall_rect)
 # as per usual 
   for event in pygame.event.get(): 
     if event.type == pygame.QUIT:
