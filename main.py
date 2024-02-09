@@ -1,6 +1,35 @@
 import pygame
+import sys
 from Character import *
 from Maze import maze_array
+
+
+def mazeload(screen, backx, backy, maze_array):
+  # Draw the visible portion of the maze
+  start_row = max(0, int(backy / 30))  # Assuming each maze cell is 30 pixels
+  end_row = min(len(maze_array), int((backy + 800) / 30))
+
+  start_col = max(0, int(backx / 30))
+  end_col = min(len(maze_array[0]), int((backx + 800) / 30))
+  print(start_col)
+  print(end_col)
+
+  for row in range(start_row, end_row):
+    for col in range(start_col, end_col):
+      cell_value = maze_array[row][col]
+      wall = pygame.image.load("images/Testwall1.png")
+
+      if cell_value == 1:  # Assuming 1 represents a wall
+        wall_rect = wall.get_rect()
+        wall_rect.topleft = (col - start_col) * 30, (row - start_row) * 30
+        collide.blit(wall, wall_rect)
+    screen.blit(collide, (backx, backy))
+
+
+
+
+
+
 print(maze_array)
 pygame.init()
 pygame.joystick.init()
@@ -8,6 +37,7 @@ try:
   pygame.mixer.init()
 except pygame.error:
   print("error line 8")
+run = pygame.image.load("images/Mater.jpg")
 
 run = True
 frame = 0
@@ -30,7 +60,6 @@ scalefactor = 2400
 
 
 running = True
-
 background1 = pygame.image.load("images/background.png")
 background_size = (scalefactor,scalefactor)
 backgroundf = pygame.transform.scale(background1,background_size)
@@ -57,6 +86,7 @@ while running:  #main running loop
   x = player.get_x()
   y = player.get_y()
   print(x,y)
+
   if x >= 710 and backx > -(scalefactor - 800):
     backx = backx - 5
   elif x <= 15 and backx < 0:
@@ -69,25 +99,8 @@ while running:  #main running loop
 
   screen.blit(backgroundf, (backx, backy))
 
+  mazeload(screen, backx, backy, maze_array)
 
-  start_row = max(0, int(backy / 30))  # Assuming each maze cell is 30 pixels
-  end_row = min(len(maze_array), int((backy + 800) / 30))
-
-  start_col = max(0, int(backx / 30))
-  end_col = min(len(maze_array[0]), int((backx + 800) / 30))
-
-  # Draw the visible portion of the maze
-  while run == True:
-    for row in range(start_row, end_row):
-      for col in range(start_col, end_col):
-        cell_value = maze_array[row][col]
-        wall = pygame.image.load("images/Testwall1.png")
-
-        if cell_value == 1:  # Assuming 1 represents a wall
-            wall_rect = wall.get_rect()
-            wall_rect.topleft = (col - start_col) * 30, (row - start_row) * 30
-            collide.blit(wall, wall_rect)
-    screen.blit(collide,(backx,backy))
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
