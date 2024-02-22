@@ -1,29 +1,25 @@
 import pygame
 import sys
-from Character import *
 from Maze import maze_array
+from Character import *
 
+def mazeload(screen, backx, backy, maze_array, background_width, background_height):
+  # Calculate the size of each maze cell dynamically
+  cell_width = background_width / len(maze_array[0])
+  cell_height = background_height / len(maze_array)
 
-def mazeload(screen, backx, backy, maze_array):
-  # Draw the visible portion of the maze
-  start_row = max(0, int(backy / 30))  # Assuming each maze cell is 30 pixels
-  end_row = min(len(maze_array), int((backy + 800) / 30))
-
-  start_col = max(0, int(backx / 30))
-  end_col = min(len(maze_array[0]), int((backx + 800) / 30))
-  print(start_col)
-  print(end_col)
-
-  for row in range(start_row, end_row):
-    for col in range(start_col, end_col):
+  for row in range(len(maze_array)):
+    for col in range(len(maze_array[0])):
       cell_value = maze_array[row][col]
-      wall = pygame.image.load("images/Testwall1.png")
-
       if cell_value == 1:  # Assuming 1 represents a wall
+        wall = pygame.image.load("images/Testwall1.png")
+        # Scale the wall image to fit the cell size
+        wall = pygame.transform.scale(wall, (int(cell_width), int(cell_height)))
         wall_rect = wall.get_rect()
-        wall_rect.topleft = (col - start_col) * 30, (row - start_row) * 30
-        collide.blit(wall, wall_rect)
-    screen.blit(collide, (backx, backy))
+        # Calculate the position of the cell on the screen
+        wall_rect.topleft = col * cell_width, row * cell_height
+        screen.blit(wall, wall_rect)
+
 
 
 
@@ -45,8 +41,8 @@ Blue = (0, 0, 255)
 Black = (0,0,0)
 backx = 0
 backy = 0
-screen = pygame.display.set_mode([800,800])
-collide = pygame.Surface((2400, 2400), pygame.SRCALPHA)
+screen = pygame.display.set_mode([800,600])
+collide = pygame.Surface((800,800), pygame.SRCALPHA)
 collide.fill((0, 0, 0, 0))
 pygame.display.set_caption("The Adventures of Dolphin-San")
 try:
@@ -56,7 +52,9 @@ try:
 except pygame.error:
   print("Error loading or playing the music file.")
 clock = pygame.time.Clock()
-scalefactor = 2400
+scalefactor = 800
+background_width = 800
+background_height = 600
 
 
 running = True
@@ -99,7 +97,7 @@ while running:  #main running loop
 
   screen.blit(backgroundf, (backx, backy))
 
-  mazeload(screen, backx, backy, maze_array)
+  mazeload(screen, backx, backy, maze_array, background_width, background_height)
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:

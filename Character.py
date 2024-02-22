@@ -1,5 +1,5 @@
 import pygame
-
+from Maze import *
 screen = (800, 800)
 
 
@@ -32,10 +32,10 @@ class Dolphin():
         self.x += self.vel
       self.last = "d"
     if keys[pygame.K_w]:  # Check if the "w" key is pressed
-      if self.y - self.vel > 0:
+      if self.y - self.vel > 20:
         self.y -= self.vel
     if keys[pygame.K_s]:  # Check if the "s" key is pressed
-      if self.y + self.vel < 725:
+      if self.y + self.vel < 485:
         self.y += self.vel
     frame %= 2  # Ensure the frame index is within the valid range
     if self.last == "d":
@@ -65,7 +65,7 @@ class Dolphin():
         if self.y - self.vel > 0:
           self.y -= self.vel
       elif left_stick_y > 0:  # Moving down
-        if self.y + self.vel < 750:
+        if self.y + self.vel < 485:
           self.y += self.vel
 
     frame %= 2  # Ensure the frame index is within the valid range
@@ -79,3 +79,12 @@ class Dolphin():
     return(self.x)
   def get_y(self):
     return(self.y)
+
+  def is_valid_move(self, x, y, maze_surface):
+    rect = pygame.Rect(x, y, 30, 30)
+    for row in range(20):
+      for col in range(20):
+        if maze_array[row * 20 + col] == 1:
+          colpoint = pygame.Rect(col * 40, row * 40, 40, 40)
+          if rect.colliderect(colpoint):
+            return False
