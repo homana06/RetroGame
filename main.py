@@ -1,39 +1,18 @@
 import pygame
 import sys
-from Maze import maze_array
+from Maze import *
+from Mazeload import *
 from Character import *
 
-def mazeload(screen, backx, backy, maze_array, background_width, background_height):
-  # Calculate the size of each maze cell dynamically
-  cell_width = background_width / len(maze_array[0])
-  cell_height = background_height / len(maze_array)
-
-  for row in range(len(maze_array)):
-    for col in range(len(maze_array[0])):
-      cell_value = maze_array[row][col]
-      if cell_value == 1:  # Assuming 1 represents a wall
-        wall = pygame.image.load("images/Testwall1.png")
-        # Scale the wall image to fit the cell size
-        wall = pygame.transform.scale(wall, (int(cell_width), int(cell_height)))
-        wall_rect = wall.get_rect()
-        # Calculate the position of the cell on the screen
-        wall_rect.topleft = col * cell_width, row * cell_height
-        screen.blit(wall, wall_rect)
 
 
-
-
-
-
-
-print(maze_array)
 pygame.init()
 pygame.joystick.init()
 try:
   pygame.mixer.init()
 except pygame.error:
   print("error line 8")
-run = pygame.image.load("images/Mater.jpg")
+gogogo = pygame.image.load("images/Mater.jpg")
 
 run = True
 frame = 0
@@ -42,8 +21,6 @@ Black = (0,0,0)
 backx = 0
 backy = 0
 screen = pygame.display.set_mode([800,600])
-collide = pygame.Surface((800,800), pygame.SRCALPHA)
-collide.fill((0, 0, 0, 0))
 pygame.display.set_caption("The Adventures of Dolphin-San")
 try:
   pygame.mixer.music.load("Music/Brinstar.mp3")
@@ -63,6 +40,7 @@ background_size = (scalefactor,scalefactor)
 backgroundf = pygame.transform.scale(background1,background_size)
 player = Dolphin(200, 400, "images/DolphinLeft.png", "images/DolphinLeft2.png",
                  "images/DolphinRight.png", "images/DolphinRight2.png")
+map = Maze(maze1,maze2,maze3,maze4)
 #---------------movement--------------------------------------|||||||||||||||||||||||||||||||
 keys = pygame.key.get_pressed()
 num_joysticks = pygame.joystick.get_count()
@@ -85,19 +63,21 @@ while running:  #main running loop
   y = player.get_y()
   print(x,y)
 
-  if x >= 710 and backx > -(scalefactor - 800):
-    backx = backx - 5
-  elif x <= 15 and backx < 0:
-    backx = backx + 5
+  #if x >= 710 and backx > -(scalefactor - 800):
+  #  backx = backx - 5
+  #elif x <= 15 and backx < 0:
+  #  backx = backx + 5
 
-  if y >= 710 and backy > -(scalefactor - 800):
-    backy = backy - 5
-  elif y <= 15 and backy < 0:
-    backy = backy + 5
+  #if y >= 710 and backy > -(scalefactor - 800):
+   # backy = backy - 5
+  #elif y <= 15 and backy < 0:
+ #   backy = backy + 5
 
-  screen.blit(backgroundf, (backx, backy))
+  screen.blit(backgroundf,(0,0))
+  screen.blit(collide,(0,0))
 
-  mazeload(screen, backx, backy, maze_array, background_width, background_height)
+  map.mazeload(screen, background_width, background_height)
+
 
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
@@ -110,7 +90,8 @@ while running:  #main running loop
 
   if keys[pygame.K_a] or keys[pygame.K_s] or keys[pygame.K_d] or keys[
       pygame.K_w]:  # Combine the if-elif branches using logical or operator
-    player.move(keys, frame, screen)
+    maze_array = map.get_mazetype()
+    player.move(keys, frame, screen, maze_array)
     if frame > 0:
       frame -= 1
     else:
